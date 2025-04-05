@@ -4,22 +4,27 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/So-ham/Content-Moderation/internal/db/postgres"
 	"github.com/So-ham/Content-Moderation/internal/handlers"
 	"github.com/So-ham/Content-Moderation/internal/models"
 	"github.com/So-ham/Content-Moderation/internal/services"
 	"github.com/So-ham/Content-Moderation/internal/web/rest"
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 )
 
 func main() {
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("err loading: %v", err)
+	if os.Getenv("ENV") == "" { // load Env only on production
+		if err := godotenv.Load(); err != nil {
+			log.Fatalln("Error loading env file", err)
+		}
 	}
+
+	v := validator.New()
 
 	db := postgres.Connect()
 
@@ -29,7 +34,7 @@ func main() {
 	service := services.New(model)
 	fmt.Println("Service layer initialized")
 
-	handler := handlers.New(service)
+	handler := handlers.New(service, v)
 	fmt.Println("Handler layer initialized")
 
 	r := rest.NewRouter(handler)

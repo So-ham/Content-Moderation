@@ -1,19 +1,23 @@
 package services
 
 import (
+	"context"
+
 	"github.com/So-ham/Content-Moderation/internal/entities"
 	"github.com/So-ham/Content-Moderation/internal/models"
+	"github.com/So-ham/Content-Moderation/pkg/tisane"
 )
 
 // Service represents the service layer having
 // all the services from all service packages
 type service struct {
-	model models.Model
+	model  models.Model
+	tisane tisane.TiSane
 }
 
 // New creates a new instance of Service
 func New(model *models.Model) Service {
-	m := &service{model: *model}
+	m := &service{model: *model, tisane: tisane.New()}
 	return m
 }
 
@@ -23,4 +27,8 @@ type Service interface {
 	Signup(req *entities.UserSignupRequest) (*entities.UserResponse, string, error)
 
 	GetAllPosts() ([]entities.PostResponse, error)
+
+	AddComment(ctx context.Context, req *entities.CommentRequest) (*entities.CommentResponse, error)
+
+	AddReview(ctx context.Context, req *entities.ReviewRequest) (resp *entities.ReviewResponse, err error)
 }

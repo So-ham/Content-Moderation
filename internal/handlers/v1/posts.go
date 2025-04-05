@@ -5,9 +5,7 @@ import (
 	"net/http"
 )
 
-// HandlerV1 represents the version 1 handler
-
-// GetAllPostsHandler handles the request to fetch all posts
+// GetAllPostsHandler retrieves all posts from the system and returns them as JSON.
 func (h *handlerV1) GetAllPostsHandler(w http.ResponseWriter, r *http.Request) {
 	posts, err := h.Service.GetAllPosts()
 	if err != nil {

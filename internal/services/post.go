@@ -18,6 +18,7 @@ func (s *service) GetAllPosts() ([]entities.PostResponse, error) {
 			Reviews:   post.Reviews,
 		})
 	}
+	//
 
 	return postResponses, nil
 }

@@ -8,12 +8,10 @@ import (
 type Moderation struct {
 	ID         uint      `json:"id" gorm:"primaryKey"`
 	ReviewID   uint      `json:"review_id" gorm:"not null"`
-	UserID     uint      `json:"user_id" gorm:"not null"`
-	Reason     string    `json:"reason" gorm:"not null"`
-	Status     string    `json:"status" gorm:"default:'pending'"` // pending, approved, rejected
+	UserID     uint      `json:"user_id" gorm:"not null;index"` // Index for faster queries
+	Severity   string    `json:"reason" gorm:"not null"`
 	Notified   bool      `json:"notified" gorm:"default:false"`
 	NotifiedAt time.Time `json:"notified_at,omitempty"`
-	ResolvedAt time.Time `json:"resolved_at,omitempty"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
 	Review     Review    `json:"review" gorm:"foreignKey:ReviewID"`

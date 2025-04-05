@@ -48,6 +48,7 @@ func Connect() *gorm.DB {
 		&entities.Post{},
 		&entities.Review{},
 		&entities.Moderation{},
+		&entities.Comment{},
 	); err != nil {
 		panic("failed to auto-migrate database: " + err.Error())
 	}

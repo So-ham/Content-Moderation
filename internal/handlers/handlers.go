@@ -3,6 +3,7 @@ package handlers
 import (
 	v1 "github.com/So-ham/Content-Moderation/internal/handlers/v1"
 	"github.com/So-ham/Content-Moderation/internal/services"
+	"github.com/go-playground/validator/v10"
 )
 
 type Handler struct {
@@ -10,9 +11,9 @@ type Handler struct {
 }
 
 // New creates a new instance of handlers
-func New(service services.Service) *Handler {
+func New(service services.Service, validate *validator.Validate) *Handler {
 	return &Handler{
-		V1: v1.New(service),
+		V1: v1.New(service, validate),
 	}
 
 }

@@ -1,4 +1,4 @@
-package rest
+package middlewares
 
 import (
 	"context"
@@ -6,10 +6,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/So-ham/Content-Moderation/internal/auth"
+	"github.com/So-ham/Content-Moderation/internal/entities"
 )
 
-// JWTMiddleware is a middleware function for validating JWT tokens
 func JWTMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenString := r.Header.Get("Authorization")
@@ -26,7 +25,7 @@ func JWTMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		claims, err := auth.ValidateToken(tokenParts[1])
+		claims, err := ValidateToken(tokenParts[1])
 		if err != nil {
 			http.Error(w, "Invalid token", http.StatusUnauthorized)
 			return
@@ -37,4 +36,11 @@ func JWTMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func GetUserContext(ctx context.Context) *entities.CustomClaims {
+	// Retrieve the claims from the context
+	claims, _ := ctx.Value("claims").(*entities.CustomClaims)
+
+	return claims
 }

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: content-moderation-deployment
+spec:
+  replicas: 1  # You can increase this number for scaling
+  selector:
+    matchLabels:
+      app: content-moderation
+  template:
+    metadata:
+      labels:
+        app: content-moderation
+    spec:
+      containers:
+      - name: content-moderation-container
+        image: 9874694577/moderation-service:${{ github.sha }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080  # The port your app listens on inside the container
+        env:
+        - name: ENV
+          value: "prod"
+        - name: PORT
+          value: "8080"  # The port your app listens on inside the container
+        - name: JWT_SECRET_KEY
+          value: "your_secret_key"  # Replace with your actual secret key
+        - name: DATABASE_URL
+          value: "postgresql://camarinAI_owner:npg_TbcKpXg1rw3Z@ep-odd-star-a503ony8-pooler.us-east-2.aws.neon.tech/camarinAI?sslmode=require"  # Replace with your actual DB URL
+        - name: TISANE_BASE_URL
+          value: "https://api.tisane.ai"  # Tisane AI API base URL
+        - name: TISANE_KEY
+          value: "2037850055a44b3b8bfff7eba777a3b6"  # Tisane API key

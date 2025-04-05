@@ -1,4 +1,4 @@
-package auth
+package middlewares
 
 import (
 	"errors"
@@ -6,20 +6,11 @@ import (
 	"time"
 
 	"github.com/So-ham/Content-Moderation/internal/entities"
-	"github.com/golang-jwt/jwt/v5"
+	"github.com/golang-jwt/jwt/v4"
 )
 
-// CustomClaims represents the claims in the JWT token
-type CustomClaims struct {
-	UserID   uint   `json:"user_id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	jwt.RegisteredClaims
-}
-
-// GenerateToken generates a new JWT token for the user
 func GenerateToken(user *entities.User) (string, error) {
-	claims := CustomClaims{
+	claims := entities.CustomClaims{
 		UserID:   user.ID,
 		Username: user.Username,
 		Email:    user.Email,
@@ -44,8 +35,8 @@ func GenerateToken(user *entities.User) (string, error) {
 }
 
 // ValidateToken validates the JWT token and returns the claims
-func ValidateToken(tokenString string) (*CustomClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+func ValidateToken(tokenString string) (*entities.CustomClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &entities.CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("unexpected signing method")
 		}
@@ -60,7 +51,7 @@ func ValidateToken(tokenString string) (*CustomClaims, error) {
 		return nil, err
 	}
 
-	claims, ok := token.Claims.(*CustomClaims)
+	claims, ok := token.Claims.(*entities.CustomClaims)
 	if !ok || !token.Valid {
 		return nil, errors.New("invalid token claims")
 	}

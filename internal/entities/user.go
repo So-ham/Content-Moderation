@@ -7,8 +7,8 @@ import (
 // User represents the user entity in the system
 type User struct {
 	ID        uint      `json:"id" gorm:"primaryKey"`
-	Username  string    `json:"username" gorm:"unique;not null"`
-	Email     string    `json:"email" gorm:"unique;not null"`
+	Username  string    `json:"username" gorm:"unique;not null;index"` // Add index for faster username lookup
+	Email     string    `json:"email" gorm:"unique;not null;index"`    // Add index for faster email lookup
 	Password  string    `json:"password,omitempty" gorm:"not null"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -16,15 +16,15 @@ type User struct {
 
 // UserSignupRequest represents the request body for user signup
 type UserSignupRequest struct {
-	Username string `json:"username" binding:"required"`
+	Username string `json:"username"`
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=6"`
 }
 
 // UserLoginRequest represents the request body for user login
 type UserLoginRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" validation:"required"`
+	Password string `json:"password" validation:"required"`
 }
 
 // UserResponse represents the response body for user-related operations

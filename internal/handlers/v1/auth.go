@@ -16,8 +16,8 @@ func (h *handlerV1) SignupHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Validate request
-	if req.Email == "" || req.Password == "" || req.Username == "" {
-		http.Error(w, "Email, password and username are required", http.StatusBadRequest)
+	if err := h.Validate.Struct(req); err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
 
@@ -43,15 +43,16 @@ func (h *handlerV1) SignupHandler(w http.ResponseWriter, r *http.Request) {
 
 // LoginHandler handles user authentication
 func (h *handlerV1) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	// ctx := r.Context()
+
 	var req entities.UserLoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
 
-	// Validate request
-	if req.Email == "" || req.Password == "" {
-		http.Error(w, "Email and password are required", http.StatusBadRequest)
+	if err := h.Validate.Struct(req); err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
 

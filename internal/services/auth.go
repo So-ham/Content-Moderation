@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/So-ham/Content-Moderation/internal/auth"
 	"github.com/So-ham/Content-Moderation/internal/entities"
+	"github.com/So-ham/Content-Moderation/pkg/middlewares"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -36,7 +36,7 @@ func (s *service) Signup(req *entities.UserSignupRequest) (*entities.UserRespons
 	}
 
 	// Generate JWT token
-	token, err := auth.GenerateToken(newUser)
+	token, err := middlewares.GenerateToken(newUser)
 	if err != nil {
 		return nil, "", err
 	}
@@ -70,7 +70,7 @@ func (s *service) Login(req *entities.UserLoginRequest) (*entities.UserResponse,
 	}
 
 	// Generate JWT token
-	token, err := auth.GenerateToken(user)
+	token, err := middlewares.GenerateToken(user)
 	if err != nil {
 		return nil, "", err
 	}

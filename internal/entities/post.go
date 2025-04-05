@@ -7,7 +7,7 @@ import (
 // Post represents a social media post created by users
 type Post struct {
 	ID        uint      `json:"id" gorm:"primaryKey"`
-	UserID    uint      `json:"user_id" gorm:"not null"`
+	UserID    uint      `json:"user_id" gorm:"not null;index"` // Index for faster queries
 	Content   string    `json:"content" gorm:"not null"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -17,7 +17,7 @@ type Post struct {
 
 // PostRequest represents the request body for creating a post
 type PostRequest struct {
-	Content string `json:"content" binding:"required"`
+	Content string `json:"content" validate:"required"`
 }
 
 // PostResponse represents the response body for post-related operations
