@@ -5,6 +5,7 @@ import (
 
 	"github.com/So-ham/Content-Moderation/internal/entities"
 	"github.com/So-ham/Content-Moderation/internal/models"
+	"github.com/So-ham/Content-Moderation/pkg/grpc/clients/notf"
 	"github.com/So-ham/Content-Moderation/pkg/tisane"
 )
 
@@ -13,11 +14,12 @@ import (
 type service struct {
 	model  models.Model
 	tisane tisane.TiSane
+	notf   notf.NotfServiceClient
 }
 
 // New creates a new instance of Service
 func New(model *models.Model) Service {
-	m := &service{model: *model, tisane: tisane.New()}
+	m := &service{model: *model, tisane: tisane.New(), notf: notf.NewClient()}
 	return m
 }
 

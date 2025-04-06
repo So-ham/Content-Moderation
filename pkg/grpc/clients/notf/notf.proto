@@ -1,0 +1,17 @@
+syntax = "proto3";
+package notf;
+option go_package="Content-Moderation/pkg/grpc/clients/notf";
+
+import "google/protobuf/empty.proto"; 
+
+// GetCardsMap messages
+message SendFlaggedNotificationReq {
+    uint32 userID = 1;
+    string content = 2;
+    string severity = 3;
+}
+
+service NotfService {    
+    // SendFlaggedNotification sends data to notification service to push notifications to users
+    rpc SendFlaggedNotification (SendFlaggedNotificationReq) returns (google.protobuf.Empty);
+}
