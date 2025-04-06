@@ -12,7 +12,7 @@ type Review struct {
 	Content     string     `json:"content" gorm:"type:text"`
 	IsFlagged   bool       `json:"is_flagged" gorm:"default:false;index"`
 	ModeratedAt *time.Time `json:"moderated_at,omitempty"`
-	CreatedAt   time.Time  `json:"created_at" gorm:"index"`
+	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 	User        User       `json:"user" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
 }

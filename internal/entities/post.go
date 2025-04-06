@@ -9,7 +9,7 @@ type Post struct {
 	ID        uint      `json:"id" gorm:"primaryKey"`
 	UserID    uint      `json:"user_id" gorm:"not null;index"`
 	Content   string    `json:"content" gorm:"not null;type:text"`
-	CreatedAt time.Time `json:"created_at" gorm:"index"`
+	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	User      User      `json:"user" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
 	Comments  []Comment `json:"comments,omitempty" gorm:"foreignKey:PostID;constraint:OnDelete:CASCADE"`

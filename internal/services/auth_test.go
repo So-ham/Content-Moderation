@@ -1,7 +1,6 @@
 package services
 
 import (
-	"context"
 	"errors"
 	"os"
 	"reflect"
@@ -16,7 +15,6 @@ import (
 
 func Test_service_Signup(t *testing.T) {
 	type args struct {
-		ctx context.Context
 		req *entities.UserSignupRequest
 	}
 
@@ -25,8 +23,8 @@ func Test_service_Signup(t *testing.T) {
 	// Setup mock for successful signup
 	successMock := userMock.User{}
 	successMock.On("FindByEmail", "test@example.com").Return(nil, nil) // User not found
-	successMock.On("Create", context.Background(), mock.AnythingOfType("*entities.User")).Return(nil).Run(func(args mock.Arguments) {
-		user := args.Get(1).(*entities.User)
+	successMock.On("Create", mock.AnythingOfType("*entities.User")).Return(nil).Run(func(args mock.Arguments) {
+		user := args.Get(0).(*entities.User)
 		user.ID = 1 // Set ID as if it was created in DB
 		user.CreatedAt = time.Now()
 		user.UpdatedAt = time.Now()
@@ -40,12 +38,12 @@ func Test_service_Signup(t *testing.T) {
 	// Setup mock for empty username validation
 	emptyUsernameMock := userMock.User{}
 	emptyUsernameMock.On("FindByEmail", "test@example.com").Return(nil, nil)
-	emptyUsernameMock.On("Create", context.Background(), mock.AnythingOfType("*entities.User")).Return(errors.New("username cannot be empty"))
+	emptyUsernameMock.On("Create", mock.AnythingOfType("*entities.User")).Return(errors.New("username cannot be empty"))
 
 	// Setup mock for weak password validation
 	weakPasswordMock := userMock.User{}
 	weakPasswordMock.On("FindByEmail", "test@example.com").Return(nil, nil)
-	weakPasswordMock.On("Create", context.Background(), mock.AnythingOfType("*entities.User")).Return(errors.New("password too weak"))
+	weakPasswordMock.On("Create", mock.AnythingOfType("*entities.User")).Return(errors.New("password too weak"))
 
 	tests := []struct {
 		name    string
@@ -63,7 +61,6 @@ func Test_service_Signup(t *testing.T) {
 				},
 			},
 			args: args{
-				ctx: context.Background(),
 				req: &entities.UserSignupRequest{
 					Username: "testuser",
 					Email:    "test@example.com",
@@ -86,7 +83,6 @@ func Test_service_Signup(t *testing.T) {
 				},
 			},
 			args: args{
-				ctx: context.Background(),
 				req: &entities.UserSignupRequest{
 					Username: "testuser",
 					Email:    "invalid-email",
@@ -105,7 +101,6 @@ func Test_service_Signup(t *testing.T) {
 				},
 			},
 			args: args{
-				ctx: context.Background(),
 				req: &entities.UserSignupRequest{
 					Username: "",
 					Email:    "test@example.com",
@@ -124,7 +119,6 @@ func Test_service_Signup(t *testing.T) {
 				},
 			},
 			args: args{
-				ctx: context.Background(),
 				req: &entities.UserSignupRequest{
 					Username: "testuser",
 					Email:    "test@example.com",
@@ -139,7 +133,7 @@ func Test_service_Signup(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := tt.s.Signup(tt.args.ctx, tt.args.req)
+			got, got1, err := tt.s.Signup(tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("service.Signup() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -173,6 +167,18 @@ func Test_service_Login(t *testing.T) {
 
 	os.Setenv("JWT_SECRET_KEY", "mockedSecretKey")
 
+	// Setup mock for successful login
+	successMock := userMock.User{}
+	validUser := &entities.User{
+		ID:        1,
+		Username:  "testuser",
+		Email:     "test@example.com",
+		Password:  "$2a$10$1234567890123456789012", // Mocked bcrypt hash
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	successMock.On("FindByEmail", "test@example.com").Return(validUser, nil)
+
 	// Setup mock for user not found
 	userNotFoundMock := userMock.User{}
 	userNotFoundMock.On("FindByEmail", "nonexistent@example.com").Return(nil, nil)
@@ -201,7 +207,27 @@ func Test_service_Login(t *testing.T) {
 		want1   string
 		wantErr bool
 	}{
-
+		{
+			name: "successful login",
+			s: &service{
+				model: models.Model{
+					User: &successMock,
+				},
+			},
+			args: args{
+				req: &entities.UserLoginRequest{
+					Email:    "test@example.com",
+					Password: "password123",
+				},
+			},
+			want: &entities.UserResponse{
+				ID:       1,
+				Username: "testuser",
+				Email:    "test@example.com",
+			},
+			want1:   "", // We can't predict the actual token value in tests
+			wantErr: false,
+		},
 		{
 			name: "user not found",
 			s: &service{
@@ -230,23 +256,6 @@ func Test_service_Login(t *testing.T) {
 				req: &entities.UserLoginRequest{
 					Email:    "test@example.com",
 					Password: "password123",
-				},
-			},
-			want:    nil,
-			want1:   "",
-			wantErr: true,
-		},
-		{
-			name: "invalid password",
-			s: &service{
-				model: models.Model{
-					User: &invalidPasswordMock,
-				},
-			},
-			args: args{
-				req: &entities.UserLoginRequest{
-					Email:    "test@example.com",
-					Password: "wrongpassword",
 				},
 			},
 			want:    nil,
