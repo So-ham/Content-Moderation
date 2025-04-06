@@ -14,7 +14,7 @@ func (m *review) AddReview(postID, userID uint, content string) (id uint, err er
 		UserID:  userID,
 		Content: content,
 	}
-	err = m.DB.Create(review).Error
+	err = m.DB.Model(&entities.Review{}).Create(review).Error
 	return review.ID, err
 }
 

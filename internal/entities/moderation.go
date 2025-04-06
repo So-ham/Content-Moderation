@@ -7,12 +7,10 @@ import (
 // Moderation represents a flagged content entry for moderation
 type Moderation struct {
 	ID        uint      `json:"id" gorm:"primaryKey"`
-	ReviewID  uint      `json:"review_id" gorm:"not null"`
 	UserID    uint      `json:"user_id" gorm:"not null;index"` // Index for faster queries
 	Severity  string    `json:"reason" gorm:"not null"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	Review    Review    `json:"review" gorm:"foreignKey:ReviewID"`
 	User      User      `json:"user" gorm:"foreignKey:UserID"`
 }
 

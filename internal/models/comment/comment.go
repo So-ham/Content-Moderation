@@ -14,7 +14,7 @@ func (m *comment) AddComment(postID, userID uint, content string) (id uint, err 
 		UserID:  userID,
 		Content: content,
 	}
-	err = m.DB.Create(comment).Error
+	err = m.DB.Model(&entities.Comment{}).Create(comment).Error
 	return comment.ID, err
 }
 

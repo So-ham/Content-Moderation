@@ -16,6 +16,7 @@ func (s *service) GetAllPosts() ([]entities.PostResponse, error) {
 			CreatedAt: post.CreatedAt,
 			User:      post.User,
 			Reviews:   post.Reviews,
+			Comments:  post.Comments,
 		})
 	}
 	//

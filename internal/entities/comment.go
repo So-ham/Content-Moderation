@@ -5,16 +5,15 @@ import "time"
 // Comment represents a comment made by a user on a post
 // Updated to include moderation fields similar to Review
 type Comment struct {
-	ID          uint      `json:"id" gorm:"primaryKey"`
-	PostID      uint      `json:"post_id" gorm:"not null"`
-	UserID      uint      `json:"user_id" gorm:"not null"`
-	Content     string    `json:"content" gorm:"not null"`
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
-	IsFlagged   bool      `json:"is_flagged" gorm:"default:false;index"`
-	ModeratedAt time.Time `json:"moderated_at,omitempty"`
-	User        User      `json:"user" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
-	Post        Post      `json:"post" gorm:"foreignKey:PostID;references:ID;constraint:OnDelete:CASCADE"`
+	ID          uint       `json:"id" gorm:"primaryKey"`
+	PostID      uint       `json:"post_id" gorm:"not null;index"`
+	UserID      uint       `json:"user_id" gorm:"not null;index"`
+	Content     string     `json:"content" gorm:"not null;type:text"`
+	IsFlagged   bool       `json:"is_flagged" gorm:"default:false;index"`
+	ModeratedAt *time.Time `json:"moderated_at,omitempty"` // Pointer allows NULL
+	CreatedAt   time.Time  `json:"created_at" gorm:"index"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	User        User       `json:"user" gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE"`
 }
 
 // CommentRequest represents the request body for creating a comment
