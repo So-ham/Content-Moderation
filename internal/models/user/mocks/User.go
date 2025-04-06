@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	entities "github.com/So-ham/Content-Moderation/internal/entities"
 	mock "github.com/stretchr/testify/mock"
 )
@@ -12,17 +14,17 @@ type User struct {
 	mock.Mock
 }
 
-// Create provides a mock function with given fields: _a0
-func (_m *User) Create(_a0 *entities.User) error {
-	ret := _m.Called(_a0)
+// Create provides a mock function with given fields: ctx, _a1
+func (_m *User) Create(ctx context.Context, _a1 *entities.User) error {
+	ret := _m.Called(ctx, _a1)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Create")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(*entities.User) error); ok {
-		r0 = rf(_a0)
+	if rf, ok := ret.Get(0).(func(context.Context, *entities.User) error); ok {
+		r0 = rf(ctx, _a1)
 	} else {
 		r0 = ret.Error(0)
 	}

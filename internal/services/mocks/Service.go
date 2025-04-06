@@ -141,9 +141,9 @@ func (_m *Service) Login(req *entities.UserLoginRequest) (*entities.UserResponse
 	return r0, r1, r2
 }
 
-// Signup provides a mock function with given fields: req
-func (_m *Service) Signup(req *entities.UserSignupRequest) (*entities.UserResponse, string, error) {
-	ret := _m.Called(req)
+// Signup provides a mock function with given fields: ctx, req
+func (_m *Service) Signup(ctx context.Context, req *entities.UserSignupRequest) (*entities.UserResponse, string, error) {
+	ret := _m.Called(ctx, req)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Signup")
@@ -152,25 +152,25 @@ func (_m *Service) Signup(req *entities.UserSignupRequest) (*entities.UserRespon
 	var r0 *entities.UserResponse
 	var r1 string
 	var r2 error
-	if rf, ok := ret.Get(0).(func(*entities.UserSignupRequest) (*entities.UserResponse, string, error)); ok {
-		return rf(req)
+	if rf, ok := ret.Get(0).(func(context.Context, *entities.UserSignupRequest) (*entities.UserResponse, string, error)); ok {
+		return rf(ctx, req)
 	}
-	if rf, ok := ret.Get(0).(func(*entities.UserSignupRequest) *entities.UserResponse); ok {
-		r0 = rf(req)
+	if rf, ok := ret.Get(0).(func(context.Context, *entities.UserSignupRequest) *entities.UserResponse); ok {
+		r0 = rf(ctx, req)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*entities.UserResponse)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(*entities.UserSignupRequest) string); ok {
-		r1 = rf(req)
+	if rf, ok := ret.Get(1).(func(context.Context, *entities.UserSignupRequest) string); ok {
+		r1 = rf(ctx, req)
 	} else {
 		r1 = ret.Get(1).(string)
 	}
 
-	if rf, ok := ret.Get(2).(func(*entities.UserSignupRequest) error); ok {
-		r2 = rf(req)
+	if rf, ok := ret.Get(2).(func(context.Context, *entities.UserSignupRequest) error); ok {
+		r2 = rf(ctx, req)
 	} else {
 		r2 = ret.Error(2)
 	}

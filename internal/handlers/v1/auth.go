@@ -9,6 +9,8 @@ import (
 
 // SignupHandler handles user registration
 func (h *handlerV1) SignupHandler(w http.ResponseWriter, r *http.Request) {
+
+	ctx := r.Context()
 	var req entities.UserSignupRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
@@ -22,7 +24,7 @@ func (h *handlerV1) SignupHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Call service
-	user, token, err := h.Service.Signup(&req)
+	user, token, err := h.Service.Signup(ctx, &req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

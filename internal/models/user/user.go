@@ -1,22 +1,16 @@
 package user
 
 import (
+	"context"
 	"errors"
 
 	"github.com/So-ham/Content-Moderation/internal/entities"
 
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 // Create creates a new user in the database
-func (m *user) Create(user *entities.User) error {
-	// Hash the password before saving
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-	user.Password = string(hashedPassword)
+func (m *user) Create(ctx context.Context, user *entities.User) error {
 
 	result := m.DB.Create(user)
 	return result.Error

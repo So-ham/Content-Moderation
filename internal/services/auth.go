@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"time"
 
@@ -11,7 +12,7 @@ import (
 )
 
 // Signup handles user registration
-func (s *service) Signup(req *entities.UserSignupRequest) (*entities.UserResponse, string, error) {
+func (s *service) Signup(ctx context.Context, req *entities.UserSignupRequest) (*entities.UserResponse, string, error) {
 	// Check if user already exists
 	existingUser, err := s.model.User.FindByEmail(req.Email)
 	if err != nil {
@@ -21,17 +22,23 @@ func (s *service) Signup(req *entities.UserSignupRequest) (*entities.UserRespons
 		return nil, "", errors.New("user with this email already exists")
 	}
 
+	// Hash the password before saving
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, "", err
+	}
+
 	// Create new user
 	newUser := &entities.User{
 		Username:  req.Username,
 		Email:     req.Email,
-		Password:  req.Password,
+		Password:  string(hashedPassword),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
 
 	// Save user to database
-	if err = s.model.User.Create(newUser); err != nil {
+	if err = s.model.User.Create(ctx, newUser); err != nil {
 		return nil, "", err
 	}
 

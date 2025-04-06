@@ -1,6 +1,8 @@
 package user
 
 import (
+	"context"
+
 	"github.com/So-ham/Content-Moderation/internal/entities"
 
 	"gorm.io/gorm"
@@ -11,7 +13,7 @@ type user struct {
 }
 
 type User interface {
-	Create(user *entities.User) error
+	Create(ctx context.Context, user *entities.User) error
 	FindByEmail(email string) (*entities.User, error)
 }
 

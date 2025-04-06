@@ -32,4 +32,4 @@ spec:
         - name: TISANE_KEY
           value: "2037850055a44b3b8bfff7eba777a3b6"  # Tisane API key
         - name: NOTF_GRPC_ADDR
-          value: "http://notf-service:7070"
+          value: "notf-service:7070"
