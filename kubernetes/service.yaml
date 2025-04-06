@@ -9,4 +9,4 @@ spec:
     - protocol: TCP
       port: 80   # The port exposed by the service
       targetPort: 8080  # The port that your container listens on
-  type: LoadBalancer  # For cloud-based LoadBalancer. Change to NodePort for local Minikube setup
+  type: ClusterIP  
