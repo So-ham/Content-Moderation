@@ -40,8 +40,13 @@ func main() {
 	r := rest.NewRouter(handler)
 	fmt.Println("Routers loaded")
 
+	allowedOrigins := []string{"http://localhost:3000"}
+	if os.Getenv("ENV") == "prod" {
+		allowedOrigins = []string{"https://content-moderation-frontend.vercel.app"}
+	}
+
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowedOrigins:   allowedOrigins,
 		AllowCredentials: true,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Content-Type", "Authorization"},
