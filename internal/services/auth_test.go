@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"os"
 	"reflect"
@@ -15,6 +16,7 @@ import (
 
 func Test_service_Signup(t *testing.T) {
 	type args struct {
+		ctx context.Context
 		req *entities.UserSignupRequest
 	}
 
@@ -23,8 +25,8 @@ func Test_service_Signup(t *testing.T) {
 	// Setup mock for successful signup
 	successMock := userMock.User{}
 	successMock.On("FindByEmail", "test@example.com").Return(nil, nil) // User not found
-	successMock.On("Create", mock.AnythingOfType("*entities.User")).Return(nil).Run(func(args mock.Arguments) {
-		user := args.Get(0).(*entities.User)
+	successMock.On("Create", mock.Anything, mock.AnythingOfType("*entities.User")).Return(nil).Run(func(args mock.Arguments) {
+		user := args.Get(1).(*entities.User)
 		user.ID = 1 // Set ID as if it was created in DB
 		user.CreatedAt = time.Now()
 		user.UpdatedAt = time.Now()
@@ -38,12 +40,12 @@ func Test_service_Signup(t *testing.T) {
 	// Setup mock for empty username validation
 	emptyUsernameMock := userMock.User{}
 	emptyUsernameMock.On("FindByEmail", "test@example.com").Return(nil, nil)
-	emptyUsernameMock.On("Create", mock.AnythingOfType("*entities.User")).Return(errors.New("username cannot be empty"))
+	emptyUsernameMock.On("Create", mock.Anything, mock.AnythingOfType("*entities.User")).Return(errors.New("username cannot be empty"))
 
 	// Setup mock for weak password validation
 	weakPasswordMock := userMock.User{}
 	weakPasswordMock.On("FindByEmail", "test@example.com").Return(nil, nil)
-	weakPasswordMock.On("Create", mock.AnythingOfType("*entities.User")).Return(errors.New("password too weak"))
+	weakPasswordMock.On("Create", mock.Anything, mock.AnythingOfType("*entities.User")).Return(errors.New("password too weak"))
 
 	tests := []struct {
 		name    string
@@ -133,7 +135,7 @@ func Test_service_Signup(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := tt.s.Signup(tt.args.req)
+			got, got1, err := tt.s.Signup(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("service.Signup() error = %v, wantErr %v", err, tt.wantErr)
 				return
