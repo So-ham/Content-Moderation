@@ -38,6 +38,7 @@ func (s *service) AddComment(ctx context.Context, req *entities.CommentRequest) 
 				moderation := &entities.Moderation{
 					UserID:   userID,
 					Severity: severity,
+					Content:  content,
 				}
 				_, err := s.model.Moderation.InsertModeration(moderation)
 				if err != nil {

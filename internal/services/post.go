@@ -1,8 +1,12 @@
 package services
 
-import "github.com/So-ham/Content-Moderation/internal/entities"
+import (
+	"context"
 
-func (s *service) GetAllPosts() ([]entities.PostResponse, error) {
+	"github.com/So-ham/Content-Moderation/internal/entities"
+)
+
+func (s *service) GetAllPosts(ctx context.Context) ([]entities.PostResponse, error) {
 	posts, err := s.model.Post.GetAllPosts()
 	if err != nil {
 		return nil, err

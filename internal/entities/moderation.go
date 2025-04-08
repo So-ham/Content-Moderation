@@ -12,6 +12,7 @@ type Moderation struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	User      User      `json:"user" gorm:"foreignKey:UserID"`
+	Content   string    `json:"content" gorm:"not null;type:text"`
 }
 
 // ModerationResponse represents the response for moderation-related operations

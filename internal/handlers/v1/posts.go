@@ -7,7 +7,9 @@ import (
 
 // GetAllPostsHandler retrieves all posts from the system and returns them as JSON.
 func (h *handlerV1) GetAllPostsHandler(w http.ResponseWriter, r *http.Request) {
-	posts, err := h.Service.GetAllPosts()
+
+	ctx := r.Context()
+	posts, err := h.Service.GetAllPosts(ctx)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

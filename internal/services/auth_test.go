@@ -12,6 +12,7 @@ import (
 	"github.com/So-ham/Content-Moderation/internal/models"
 	userMock "github.com/So-ham/Content-Moderation/internal/models/user/mocks"
 	"github.com/stretchr/testify/mock"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Test_service_Signup(t *testing.T) {
@@ -164,10 +165,13 @@ func Test_service_Signup(t *testing.T) {
 
 func Test_service_Login(t *testing.T) {
 	type args struct {
+		ctx context.Context
 		req *entities.UserLoginRequest
 	}
 
 	os.Setenv("JWT_SECRET_KEY", "mockedSecretKey")
+
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("password123"), bcrypt.DefaultCost)
 
 	// Setup mock for successful login
 	successMock := userMock.User{}
@@ -175,7 +179,7 @@ func Test_service_Login(t *testing.T) {
 		ID:        1,
 		Username:  "testuser",
 		Email:     "test@example.com",
-		Password:  "$2a$10$1234567890123456789012", // Mocked bcrypt hash
+		Password:  string(hashedPassword), // Mocked bcrypt hash
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -195,7 +199,7 @@ func Test_service_Login(t *testing.T) {
 		ID:        3,
 		Username:  "testuser",
 		Email:     "test@example.com",
-		Password:  "$2a$10$differenthashforpassword", // Different hash that won't match
+		Password:  "$2a$10$D9cWdz6oRjKTDZVkjNcX7uy6xH2pAazBz4QwO.K3uEtgxP44nXXGy", // Different hash that won't match
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -268,7 +272,7 @@ func Test_service_Login(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := tt.s.Login(tt.args.req)
+			got, got1, err := tt.s.Login(tt.args.ctx, tt.args.req)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("service.Login() error = %v, wantErr %v", err, tt.wantErr)
 				return

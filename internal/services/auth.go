@@ -60,7 +60,7 @@ func (s *service) Signup(ctx context.Context, req *entities.UserSignupRequest) (
 }
 
 // Login handles user authentication
-func (s *service) Login(req *entities.UserLoginRequest) (*entities.UserResponse, string, error) {
+func (s *service) Login(ctx context.Context, req *entities.UserLoginRequest) (*entities.UserResponse, string, error) {
 	// Find user by email
 	user, err := s.model.User.FindByEmail(req.Email)
 	if err != nil {

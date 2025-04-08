@@ -45,7 +45,7 @@ func (h *handlerV1) SignupHandler(w http.ResponseWriter, r *http.Request) {
 
 // LoginHandler handles user authentication
 func (h *handlerV1) LoginHandler(w http.ResponseWriter, r *http.Request) {
-	// ctx := r.Context()
+	ctx := r.Context()
 
 	var req entities.UserLoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -59,7 +59,7 @@ func (h *handlerV1) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Call service
-	user, token, err := h.Service.Login(&req)
+	user, token, err := h.Service.Login(ctx, &req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return

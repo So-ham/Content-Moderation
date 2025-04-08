@@ -74,9 +74,9 @@ func (_m *Service) AddReview(ctx context.Context, req *entities.ReviewRequest) (
 	return r0, r1
 }
 
-// GetAllPosts provides a mock function with no fields
-func (_m *Service) GetAllPosts() ([]entities.PostResponse, error) {
-	ret := _m.Called()
+// GetAllPosts provides a mock function with given fields: ctx
+func (_m *Service) GetAllPosts(ctx context.Context) ([]entities.PostResponse, error) {
+	ret := _m.Called(ctx)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetAllPosts")
@@ -84,19 +84,19 @@ func (_m *Service) GetAllPosts() ([]entities.PostResponse, error) {
 
 	var r0 []entities.PostResponse
 	var r1 error
-	if rf, ok := ret.Get(0).(func() ([]entities.PostResponse, error)); ok {
-		return rf()
+	if rf, ok := ret.Get(0).(func(context.Context) ([]entities.PostResponse, error)); ok {
+		return rf(ctx)
 	}
-	if rf, ok := ret.Get(0).(func() []entities.PostResponse); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(context.Context) []entities.PostResponse); ok {
+		r0 = rf(ctx)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]entities.PostResponse)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -104,9 +104,9 @@ func (_m *Service) GetAllPosts() ([]entities.PostResponse, error) {
 	return r0, r1
 }
 
-// Login provides a mock function with given fields: req
-func (_m *Service) Login(req *entities.UserLoginRequest) (*entities.UserResponse, string, error) {
-	ret := _m.Called(req)
+// Login provides a mock function with given fields: ctx, req
+func (_m *Service) Login(ctx context.Context, req *entities.UserLoginRequest) (*entities.UserResponse, string, error) {
+	ret := _m.Called(ctx, req)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Login")
@@ -115,25 +115,25 @@ func (_m *Service) Login(req *entities.UserLoginRequest) (*entities.UserResponse
 	var r0 *entities.UserResponse
 	var r1 string
 	var r2 error
-	if rf, ok := ret.Get(0).(func(*entities.UserLoginRequest) (*entities.UserResponse, string, error)); ok {
-		return rf(req)
+	if rf, ok := ret.Get(0).(func(context.Context, *entities.UserLoginRequest) (*entities.UserResponse, string, error)); ok {
+		return rf(ctx, req)
 	}
-	if rf, ok := ret.Get(0).(func(*entities.UserLoginRequest) *entities.UserResponse); ok {
-		r0 = rf(req)
+	if rf, ok := ret.Get(0).(func(context.Context, *entities.UserLoginRequest) *entities.UserResponse); ok {
+		r0 = rf(ctx, req)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*entities.UserResponse)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(*entities.UserLoginRequest) string); ok {
-		r1 = rf(req)
+	if rf, ok := ret.Get(1).(func(context.Context, *entities.UserLoginRequest) string); ok {
+		r1 = rf(ctx, req)
 	} else {
 		r1 = ret.Get(1).(string)
 	}
 
-	if rf, ok := ret.Get(2).(func(*entities.UserLoginRequest) error); ok {
-		r2 = rf(req)
+	if rf, ok := ret.Get(2).(func(context.Context, *entities.UserLoginRequest) error); ok {
+		r2 = rf(ctx, req)
 	} else {
 		r2 = ret.Error(2)
 	}

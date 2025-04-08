@@ -24,11 +24,11 @@ func New(model *models.Model) Service {
 }
 
 type Service interface {
-	Login(req *entities.UserLoginRequest) (*entities.UserResponse, string, error)
+	Login(ctx context.Context, req *entities.UserLoginRequest) (*entities.UserResponse, string, error)
 
 	Signup(ctx context.Context, req *entities.UserSignupRequest) (*entities.UserResponse, string, error)
 
-	GetAllPosts() ([]entities.PostResponse, error)
+	GetAllPosts(ctx context.Context) ([]entities.PostResponse, error)
 
 	AddComment(ctx context.Context, req *entities.CommentRequest) (*entities.CommentResponse, error)
 

@@ -56,6 +56,7 @@ func (s *service) AddReview(ctx context.Context, req *entities.ReviewRequest) (r
 			moderation := &entities.Moderation{
 				UserID:   userID,
 				Severity: severity,
+				Content:  content,
 			}
 			if _, err := s.model.Moderation.InsertModeration(moderation); err != nil {
 				log.Printf("Failed to insert moderation entry: %v", err)
